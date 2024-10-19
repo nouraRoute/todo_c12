@@ -3,14 +3,28 @@ import 'package:todo_c12/common/app_colors.dart';
 
 class AppTheme {
   static ThemeData lightTheme = ThemeData(
-    appBarTheme: AppBarTheme(
-        color: AppColors.primaryColor,
+    datePickerTheme: DatePickerThemeData(
+      headerBackgroundColor: AppColors.primaryColor,
+      headerForegroundColor: Colors.white,
+      backgroundColor: Colors.white,
+    ),
+    primaryColor: AppColors.primaryColor,
+    appBarTheme: const AppBarTheme(
+        color: Colors.transparent,
         foregroundColor: Colors.white,
         centerTitle: false,
         elevation: 0),
-    textTheme: const TextTheme(
+    textTheme: TextTheme(
+        bodyMedium: const TextStyle(
+            //  color: AppColors.primaryColor,
+            fontSize: 14,
+            fontWeight: FontWeight.w500),
+        titleMedium: TextStyle(
+            color: AppColors.primaryColor,
+            fontSize: 18,
+            fontWeight: FontWeight.w700),
         titleLarge:
-            TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+            const TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
     useMaterial3: true,
     colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
     scaffoldBackgroundColor: AppColors.bgColorLight,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_c12/common/widgets/custum_scaffold_bg.dart';
+import 'package:todo_c12/screens/widgets/bottom_shete_form.dart';
 import 'package:todo_c12/tabs/settings/settings_tab.dart';
 import 'package:todo_c12/tabs/tasks/tasks_tab.dart';
 
@@ -15,15 +17,19 @@ class _HomeScreenState extends State<HomeScreen> {
   int currentTabIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
+    return CustomScaffoldBG(
+      appBar: AppBar(
+        title: const Text('To Do app'),
+      ),
       body: tabsList[currentTabIndex],
       bottomNavigationBar: BottomAppBar(
+        elevation: 0,
         shape: const CircularNotchedRectangle(),
         notchMargin: 10,
         padding: EdgeInsets.zero,
         clipBehavior: Clip.antiAlias,
         child: BottomNavigationBar(
+            elevation: 0,
             onTap: (value) {
               currentTabIndex = value;
               setState(() {});
@@ -42,7 +48,15 @@ class _HomeScreenState extends State<HomeScreen> {
           Icons.add,
           size: 30,
         ),
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            context: context,
+            builder: (context) {
+              return const BottomSheetForm();
+            },
+          );
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
