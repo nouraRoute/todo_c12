@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_c12/common/widgets/custom_elevates_button.dart';
 import 'package:todo_c12/common/widgets/custom_text_field.dart';
+import 'package:todo_c12/tabs/tasks/models/task_model.dart';
+import 'package:todo_c12/tabs/tasks/provider/tasks_provider.dart';
 
 class BottomSheetForm extends StatefulWidget {
   const BottomSheetForm({super.key});
@@ -14,12 +17,19 @@ class _BottomSheetFormState extends State<BottomSheetForm> {
   TextEditingController taskNameController = TextEditingController();
   TextEditingController taskDetailsController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  DateTime selectedDate = DateTime.now();
+  DateTime selectedDate =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   DateFormat dateFormat = DateFormat('yyyy/MM/dd');
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<TasksProvider>(context, listen: false);
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: EdgeInsets.only(
+          top: 20.0,
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 20,
+          right: 20),
       child: Form(
         key: formKey,
         child: Column(
@@ -71,7 +81,7 @@ class _BottomSheetFormState extends State<BottomSheetForm> {
                       initialDate: selectedDate,
                       lastDate: DateTime.now().add(const Duration(days: 200)));
                   if (date != null) {
-                    selectedDate = date;
+                    selectedDate = DateTime(date.year, date.month, date.day);
                     setState(() {});
                   }
                 },
@@ -83,10 +93,25 @@ class _BottomSheetFormState extends State<BottomSheetForm> {
                       .copyWith(fontSize: 16),
                 )),
             CustomElevatedButton(
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {}
-                },
-                title: 'Add'),
+                onPressed: isLoading
+                    ? null
+                    : () async {
+                        if (formKey.currentState!.validate()) {
+                          TaskModel newTask = TaskModel(
+                              date: selectedDate,
+                              name: taskNameController.text.trim(),
+                              details: taskDetailsController.text.trim());
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await provider.addTask(newTask);
+                          Navigator.of(context).pop();
+                          setState(() {
+                            isLoading = false;
+                          });
+                        }
+                      },
+                title: isLoading ? 'loading...' : 'Add'),
             const SizedBox(
               height: 40,
             )

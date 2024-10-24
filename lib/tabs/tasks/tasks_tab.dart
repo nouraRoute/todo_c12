@@ -1,6 +1,7 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_c12/tabs/tasks/models/task_model.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_c12/tabs/tasks/provider/tasks_provider.dart';
 import 'package:todo_c12/tabs/tasks/widgets/task_card.dart';
 
 class TasksTab extends StatefulWidget {
@@ -13,27 +14,21 @@ class TasksTab extends StatefulWidget {
 class _TasksTabState extends State<TasksTab> {
   EasyInfiniteDateTimelineController? controller =
       EasyInfiniteDateTimelineController();
-  DateTime selectedDate = DateTime.now();
-  List<TaskModel> task = List.generate(
-    10,
-    (index) => TaskModel(
-        name: 'name$index', details: 'details$index', date: DateTime.now()),
-  );
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<TasksProvider>(context);
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: EasyInfiniteDateTimeLine(
             onDateChange: (newDate) {
-              selectedDate = newDate;
-              setState(() {});
+              provider.changeSelectedDate(newDate);
             },
             showTimelineHeader: false,
             firstDate: DateTime(2024),
             lastDate: DateTime(2025),
-            focusDate: selectedDate,
+            focusDate: provider.selectedDate,
             dayProps: EasyDayProps(
                 todayStyle: DayStyle(
                     decoration: BoxDecoration(
@@ -67,9 +62,9 @@ class _TasksTabState extends State<TasksTab> {
           child: ListView.builder(
             padding: EdgeInsets.only(top: 20),
             itemBuilder: (context, index) => TaskCard(
-              taskModel: task[index],
+              taskModel: provider.tasks[index],
             ),
-            itemCount: task.length,
+            itemCount: provider.tasks.length,
           ),
         ),
       ],
