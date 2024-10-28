@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class CustomAuthTextfield extends StatefulWidget {
   const CustomAuthTextfield(
       {super.key,
+      this.validator,
       this.hintText,
       this.controller,
       this.suffixIcon,
@@ -14,7 +15,7 @@ class CustomAuthTextfield extends StatefulWidget {
   final Widget? prefixIcon, suffixIcon;
   final TextInputType? keyboardTyp;
   final bool password;
-
+  final String? Function(String?)? validator;
   @override
   State<CustomAuthTextfield> createState() => _CustomAuthTextfieldState();
 }
@@ -29,6 +30,7 @@ class _CustomAuthTextfieldState extends State<CustomAuthTextfield> {
         controller: widget.controller,
         keyboardType: widget.keyboardTyp,
         obscureText: widget.password && !showPAssword,
+        validator: widget.validator,
         decoration: InputDecoration(
           filled: true,
           fillColor: const Color.fromRGBO(249, 250, 252, 1),
