@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_c12/auth/provider/auth_provider.dart';
 import 'package:todo_c12/auth/view/login_screen.dart';
 import 'package:todo_c12/auth/view/signup_screen.dart';
 import 'package:todo_c12/common/app_theme.dart';
@@ -19,9 +20,14 @@ Future<void> main() async {
   // FirebaseFirestore.instance.disableNetwork();
   // FirebaseFirestore.instance.settings =
   //     const Settings(cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED);
-  runApp(ChangeNotifierProvider(
-      create: (context) => TasksProvider()..getTasksByDate(),
-      child: const MyApp()));
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(
+      create: (context) => TasksProvider(),
+    ),
+    ChangeNotifierProvider(
+      create: (context) => LocalAuthProvider(),
+    ),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

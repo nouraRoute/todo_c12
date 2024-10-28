@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_c12/auth/models/user_data_mode.dart';
+import 'package:todo_c12/auth/provider/auth_provider.dart';
 import 'package:todo_c12/auth/view/login_screen.dart';
 import 'package:todo_c12/auth/widgets/custom_auth_textfield.dart';
 import 'package:todo_c12/common/widgets/custom_elevates_button.dart';
+import 'package:todo_c12/screens/home_screen.dart';
+import 'package:todo_c12/tabs/tasks/provider/tasks_provider.dart';
 
 class SignupScreen extends StatefulWidget {
   static const String routName = 'signup_screen';
@@ -44,6 +49,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     CustomAuthTextfield(
                       hintText: 'Enter your email',
                       keyboardTyp: TextInputType.emailAddress,
+                      controller: emailController,
                       prefixIcon: Container(
                           margin: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(
@@ -64,6 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     CustomAuthTextfield(
                       hintText: 'Enter your name',
                       keyboardTyp: TextInputType.text,
+                      controller: nameController,
                       prefixIcon: Container(
                           margin: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(
@@ -85,6 +92,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     CustomAuthTextfield(
                       hintText: 'Enter your password',
                       password: true,
+                      controller: passwordController,
                       prefixIcon: Container(
                           margin: const EdgeInsets.all(8),
                           decoration: const BoxDecoration(
@@ -110,13 +118,38 @@ class _SignupScreenState extends State<SignupScreen> {
                     SizedBox(
                       width: 220,
                       height: 50,
-                      child: CustomElevatedButton(
-                        onPressed: () {
-                          if (formKey.currentState!.validate()) {}
-                        },
-                        title: 'Register ',
-                        backgroundColor: Colors.black,
-                      ),
+                      child: Provider.of<LocalAuthProvider>(context).loading
+                          ? const Center(child: CircularProgressIndicator())
+                          : CustomElevatedButton(
+                              onPressed: () async {
+                                if (formKey.currentState!.validate()) {
+                                  await Provider.of<LocalAuthProvider>(context,
+                                          listen: false)
+                                      .register(
+                                          UserDataModel(
+                                              name: nameController.text,
+                                              email: emailController.text),
+                                          passwordController.text)
+                                      .then(
+                                    (value) {
+                                      if (Provider.of<LocalAuthProvider>(
+                                                  context,
+                                                  listen: false)
+                                              .userDataModel !=
+                                          null) {
+                                        Provider.of<TasksProvider>(context,
+                                                listen: false)
+                                            .getTasksByDate();
+                                        Navigator.of(context).popAndPushNamed(
+                                            HomeScreen.routName);
+                                      }
+                                    },
+                                  );
+                                }
+                              },
+                              title: 'Register ',
+                              backgroundColor: Colors.black,
+                            ),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -144,7 +177,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         )),
                         Text('OR'),
                         Expanded(
-                            child: const Divider(
+                            child: Divider(
                           endIndent: 10,
                           indent: 10,
                         ))

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo_c12/auth/provider/auth_provider.dart';
 import 'package:todo_c12/auth/view/signup_screen.dart';
 import 'package:todo_c12/auth/widgets/custom_auth_textfield.dart';
 import 'package:todo_c12/common/widgets/custom_elevates_button.dart';
+import 'package:todo_c12/screens/home_screen.dart';
+import 'package:todo_c12/tabs/tasks/provider/tasks_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routName = 'login_screen';
@@ -90,15 +94,36 @@ class _LoginScreenState extends State<LoginScreen> {
               SizedBox(
                 width: 220,
                 height: 50,
-                child: CustomElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      ///Log in with firebase
-                    }
-                  },
-                  title: 'Login ',
-                  backgroundColor: Colors.black,
-                ),
+                child: Provider.of<LocalAuthProvider>(
+                  context,
+                ).loading
+                    ? Center(child: CircularProgressIndicator())
+                    : CustomElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            Provider.of<LocalAuthProvider>(context,
+                                    listen: false)
+                                .login(emailController.text,
+                                    passwordController.text)
+                                .then(
+                              (value) {
+                                if (Provider.of<LocalAuthProvider>(context,
+                                            listen: false)
+                                        .userDataModel !=
+                                    null) {
+                                  Provider.of<TasksProvider>(context,
+                                          listen: false)
+                                      .getTasksByDate();
+                                  Navigator.of(context)
+                                      .popAndPushNamed(HomeScreen.routName);
+                                }
+                              },
+                            );
+                          }
+                        },
+                        title: 'Login ',
+                        backgroundColor: Colors.black,
+                      ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
