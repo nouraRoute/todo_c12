@@ -1,9 +1,10 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_c12/auth/view/login_screen.dart';
+import 'package:todo_c12/auth/view/signup_screen.dart';
 import 'package:todo_c12/common/app_theme.dart';
 import 'package:todo_c12/firebase_options.dart';
 import 'package:todo_c12/screens/home_screen.dart';
@@ -31,8 +32,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppTheme.lightTheme,
-      routes: {HomeScreen.routName: (_) => const HomeScreen()},
-      initialRoute: HomeScreen.routName,
+      routes: {
+        HomeScreen.routName: (_) => const HomeScreen(),
+        LoginScreen.routName: (_) => const LoginScreen(),
+        SignupScreen.routName: (_) => const SignupScreen()
+      },
+      initialRoute: LoginScreen.routName,
       debugShowCheckedModeBanner: false,
     );
   }

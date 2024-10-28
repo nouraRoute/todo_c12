@@ -60,7 +60,7 @@ class _TasksTabState extends State<TasksTab> {
         ),
         Expanded(
           child: ListView.builder(
-            padding: EdgeInsets.only(top: 20),
+            padding: const EdgeInsets.only(top: 20),
             itemBuilder: (context, index) => TaskCard(
               taskModel: provider.tasks[index],
             ),

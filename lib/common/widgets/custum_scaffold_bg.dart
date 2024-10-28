@@ -20,7 +20,7 @@ class CustomScaffoldBG extends StatelessWidget {
             gradient: LinearGradient(colors: [
           Theme.of(context).primaryColor,
           Theme.of(context).scaffoldBackgroundColor
-        ], stops: [
+        ], stops: const [
           .2,
           .2
         ], begin: Alignment.topCenter, end: Alignment.bottomCenter)),

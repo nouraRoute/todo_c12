@@ -104,8 +104,10 @@ class _BottomSheetFormState extends State<BottomSheetForm> {
                           setState(() {
                             isLoading = true;
                           });
-                          await provider.addTask(newTask);
-                          Navigator.of(context).pop();
+                          await provider.addTask(newTask).then(
+                                (value) => Navigator.of(context).pop(),
+                              );
+
                           setState(() {
                             isLoading = false;
                           });

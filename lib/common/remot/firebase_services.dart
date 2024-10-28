@@ -32,7 +32,6 @@ class FirebaseServices {
   // }
 
   static Future<List<TaskModel>> getTasksByDate(DateTime selectedDate) async {
-    print(selectedDate.toString());
     CollectionReference<TaskModel> tasksCollection = getTasksCollection();
     QuerySnapshot<TaskModel> tasksQuery = await tasksCollection
         .where('date', isEqualTo: Timestamp.fromDate(selectedDate))

@@ -5,8 +5,8 @@ import 'package:todo_c12/tabs/tasks/models/task_model.dart';
 import 'package:todo_c12/tabs/tasks/provider/tasks_provider.dart';
 
 class TaskCard extends StatelessWidget {
-  TaskCard({required this.taskModel, super.key});
-  TaskModel taskModel;
+  const TaskCard({required this.taskModel, super.key});
+  final TaskModel taskModel;
   @override
   Widget build(BuildContext context) {
     double sHeight = MediaQuery.of(context).size.height;
@@ -24,12 +24,12 @@ class TaskCard extends StatelessWidget {
                   Provider.of<TasksProvider>(context, listen: false)
                       .deleteTask(taskModel.id);
                 },
-                backgroundColor: Color(0xFFFE4A49),
+                backgroundColor: const Color(0xFFFE4A49),
                 foregroundColor: Colors.white,
                 icon: Icons.delete,
                 label: 'Delete',
-                borderRadius:
-                    BorderRadius.horizontal(left: Radius.circular(12)),
+                borderRadius: const BorderRadius.horizontal(
+                    left: Radius.circular(12)),
               ),
             ],
           ),
