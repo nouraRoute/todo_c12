@@ -44,16 +44,20 @@ class FirebaseServices {
   //       .toList();
   // }
 
-  static Future<List<TaskModel>> getTasksByDate(DateTime selectedDate) async {
+  static Stream<List<TaskModel>> getTasksByDate(DateTime selectedDate) async* {
     CollectionReference<TaskModel> tasksCollection = getTasksCollection();
-    QuerySnapshot<TaskModel> tasksQuery = await tasksCollection
+    Stream<QuerySnapshot<TaskModel>> tasksQuery = tasksCollection
         .where('date', isEqualTo: Timestamp.fromDate(selectedDate))
-        .get();
-    return tasksQuery.docs
-        .map(
-          (e) => e.data(),
-        )
-        .toList();
+        .snapshots();
+
+    var data = tasksQuery.map(
+      (event) => event.docs
+          .map(
+            (e) => e.data(),
+          )
+          .toList(),
+    );
+    yield* data;
   }
 
   static Future<UserDataModel?> login(String email, String password) async {

@@ -1,6 +1,7 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:todo_c12/tabs/tasks/models/task_model.dart';
 import 'package:todo_c12/tabs/tasks/provider/tasks_provider.dart';
 import 'package:todo_c12/tabs/tasks/widgets/task_card.dart';
 
@@ -14,21 +15,23 @@ class TasksTab extends StatefulWidget {
 class _TasksTabState extends State<TasksTab> {
   EasyInfiniteDateTimelineController? controller =
       EasyInfiniteDateTimelineController();
+  DateTime focusDate = DateTime.now();
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<TasksProvider>(context);
+    // var provider = Provider.of<TasksProvider>(context);
     return Column(
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: EasyInfiniteDateTimeLine(
             onDateChange: (newDate) {
-              provider.changeSelectedDate(newDate);
+              focusDate = newDate;
+              setState(() {});
             },
             showTimelineHeader: false,
             firstDate: DateTime(2024),
             lastDate: DateTime(2025),
-            focusDate: provider.selectedDate,
+            focusDate: focusDate,
             dayProps: EasyDayProps(
                 todayStyle: DayStyle(
                     decoration: BoxDecoration(
@@ -58,15 +61,38 @@ class _TasksTabState extends State<TasksTab> {
                         borderRadius: BorderRadius.circular(12)))),
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(top: 20),
-            itemBuilder: (context, index) => TaskCard(
-              taskModel: provider.tasks[index],
-            ),
-            itemCount: provider.tasks.length,
-          ),
-        ),
+        StreamBuilder<List<TaskModel>?>(
+          stream: Provider.of<TasksProvider>(context, listen: false)
+              .getTasksByDate(focusDate),
+          builder: (context, snapshot) {
+            print('XXX->${snapshot.connectionState}');
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Expanded(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              var data = snapshot.data;
+              print('XXX->${snapshot.data}');
+              if (data == null || data.isEmpty) {
+                return const Expanded(
+                    child: Center(
+                  child: Text('No tasks today'),
+                ));
+              }
+              return Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(top: 20),
+                  itemBuilder: (context, index) => TaskCard(
+                    taskModel: (data)[index],
+                  ),
+                  itemCount: (data).length,
+                ),
+              );
+            }
+          },
+        )
       ],
     );
   }

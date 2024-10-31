@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,7 +44,9 @@ class MyApp extends StatelessWidget {
         LoginScreen.routName: (_) => const LoginScreen(),
         SignupScreen.routName: (_) => const SignupScreen()
       },
-      initialRoute: LoginScreen.routName,
+      initialRoute: FirebaseAuth.instance.currentUser?.uid == null
+          ? LoginScreen.routName
+          : HomeScreen.routName,
       debugShowCheckedModeBanner: false,
     );
   }

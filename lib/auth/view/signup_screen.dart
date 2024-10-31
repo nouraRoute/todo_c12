@@ -137,9 +137,6 @@ class _SignupScreenState extends State<SignupScreen> {
                                                   listen: false)
                                               .userDataModel !=
                                           null) {
-                                        Provider.of<TasksProvider>(context,
-                                                listen: false)
-                                            .getTasksByDate();
                                         Navigator.of(context).popAndPushNamed(
                                             HomeScreen.routName);
                                       }

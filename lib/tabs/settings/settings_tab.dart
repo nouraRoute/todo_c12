@@ -17,7 +17,6 @@ class SettingsTab extends StatelessWidget {
         ListTile(
           onTap: () {
             FirebaseServices.logout();
-            Provider.of<TasksProvider>(context, listen: false).tasks.clear();
             Navigator.of(context).popAndPushNamed(LoginScreen.routName);
           },
           title: const Text('Logout'),

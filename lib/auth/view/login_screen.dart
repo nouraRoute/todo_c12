@@ -111,9 +111,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                             listen: false)
                                         .userDataModel !=
                                     null) {
-                                  Provider.of<TasksProvider>(context,
-                                          listen: false)
-                                      .getTasksByDate();
                                   Navigator.of(context)
                                       .popAndPushNamed(HomeScreen.routName);
                                 }
